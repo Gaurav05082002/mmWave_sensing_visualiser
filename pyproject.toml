@@ -1,0 +1,19 @@
+
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Aritra Sen", email = "aretrosen@proton.me"},
+]
+dependencies = [
+    "matplotlib>=3.7.1",
+    "ttkthemes>=3.2.2",
+    "msgspec>=0.14.2",
+    "numba>=0.57.0",
+]
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[tool.pyright]
+extraPaths = ["__pypackages__/3.10/lib/"]
