@@ -13,7 +13,8 @@ import numpy as np
 import serial
 from dotenv import load_dotenv
 
-import fft
+# import fft
+from scipy.fftpack import fft
 # smooth
 
 load_dotenv(".env")
@@ -24,7 +25,7 @@ configs = {
     "macro": "Configurations/macro_7fps.cfg",
     "micro": "Configurations/micro_2fps.cfg",
 }
-configFileName = configs["pointcloud"]
+#configFileName = configs["pointcloud"]
 # CLIport = {}
 # Dataport = {}
 byteBuffer = np.zeros(2**15, dtype="uint8")
@@ -103,7 +104,7 @@ def serialConfig(configFileName):
     config = [line.rstrip("\r\n") for line in open(configFileName)]
     for i in config:
         print(i)
-        # CLIport.write((i + "\n").encode())
+        CLIport.write((i + "\n").encode())
         time.sleep(0.01)
 
     return CLIport, Dataport
@@ -126,7 +127,7 @@ def parseConfigFile(configFileName):
         splitWords = i.split(" ")
 
         # Hard code the number of antennas, change if other configuration is used
-        numRxAnt = 4
+        numRxAnt = 6
         numTxAnt = 2
 
         # Get the information about the profile configuration
