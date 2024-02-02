@@ -97,8 +97,8 @@ def serialConfig(configFileName):
         Dataport = serial.Serial("/dev/ttyACM1", 921600)
 
     elif os_name == "Windows_NT":
-        CLIport = serial.Serial("COM3", 115200)
-        Dataport = serial.Serial("COM4", 921600)
+        CLIport = serial.Serial("COM6", 115200)
+        Dataport = serial.Serial("COM9", 921600)
 
     # Read the configuration file and send it to the board
     config = [line.rstrip("\r\n") for line in open(configFileName)]
@@ -596,7 +596,7 @@ def readAndParseData16xx(Dataport, configParameters, filename):
         for tlvIdx in range(numTLVs):
             # word array to convert 4 bytes to a 32 bit number
             word = [1, 2**8, 2**16, 2**24]
-
+            # print("tlvIdx:", tlvIdx, "numTLVs:", numTLVs, "\n")
             # Check the header of the TLV message
             tlv_type = np.matmul(byteBuffer[idX : idX + 4], word)
             idX += 4
@@ -604,27 +604,39 @@ def readAndParseData16xx(Dataport, configParameters, filename):
             idX += 4
             # Read the data depending on the TLV message
             if tlv_type == MMWDEMO_UART_MSG_DETECTED_POINTS:
+                print("CASE 1 ","tlv_type:", tlv_type , "MMWDEMO_UART_MSG_DETECTED_POINTS"  , MMWDEMO_UART_MSG_DETECTED_POINTS , "\n")
                 detObj = processDetectedPoints(byteBuffer, idX, configParameters)
+                # print(detObj,"\n")
                 finalObj.update(detObj)
+                
+
             elif tlv_type == MMWDEMO_UART_MSG_RANGE_PROFILE:
+                print("CASE 2 ","tlv_type:", tlv_type , "MMWDEMO_UART_MSG_RANGE_PROFILE"  , MMWDEMO_UART_MSG_RANGE_PROFILE , "\n")
                 noiseObj = processRangeNoiseProfile(
                     byteBuffer, idX, detObj, configParameters, isRangeProfile=True
                 )
+                # print(noiseObj,"\n")
                 finalObj.update(noiseObj)
             elif tlv_type == MMWDEMO_OUTPUT_MSG_NOISE_PROFILE:
+                print("CASE 3 ","tlv_type:", tlv_type , "MMWDEMO_OUTPUT_MSG_NOISE_PROFILE"  , MMWDEMO_OUTPUT_MSG_NOISE_PROFILE , "\n")
                 noiseObj = processRangeNoiseProfile(
                     byteBuffer, idX, detObj, configParameters, isRangeProfile=False
                 )
+                # print(noiseObj,"\n")
                 finalObj.update(noiseObj)
             elif tlv_type == MMWDEMO_OUTPUT_MSG_AZIMUT_STATIC_HEAT_MAP:
+                print("CASE 4 ","tlv_type:", tlv_type , "MMWDEMO_OUTPUT_MSG_AZIMUT_STATIC_HEAT_MAP"  , MMWDEMO_OUTPUT_MSG_AZIMUT_STATIC_HEAT_MAP , "\n")
                 heatObj = processAzimuthHeatMap(byteBuffer, idX, configParameters)
-                finalObj.update(heatObj)
+                # finalObj.update(heatObj)
             elif tlv_type == MMWDEMO_OUTPUT_MSG_RANGE_DOPPLER_HEAT_MAP:
+                print("CASE 5 ","tlv_type:", tlv_type , "MMWDEMO_OUTPUT_MSG_RANGE_DOPPLER_HEAT_MAP"  , MMWDEMO_OUTPUT_MSG_RANGE_DOPPLER_HEAT_MAP , "\n")
                 dopplerObj = processRangeDopplerHeatMap(byteBuffer, idX)
+                # print(dopplerObj,"\n")
                 finalObj.update(dopplerObj)
             elif tlv_type == MMWDEMO_OUTPUT_MSG_STATS:
+                print("CASE 6 ","tlv_type:", tlv_type , "MMWDEMO_OUTPUT_MSG_STATS"  , MMWDEMO_OUTPUT_MSG_STATS , "\n")
                 statisticsObj = processStatistics(byteBuffer, idX)
-                finalObj.update(statisticsObj)
+                # finalObj.update(statisticsObj)
 
             idX += tlv_length
             # except Error as e:
@@ -647,6 +659,7 @@ def readAndParseData16xx(Dataport, configParameters, filename):
             # Check that there are no errors with the buffer length
             if byteBufferLength < 0:
                 byteBufferLength = 0
+                # this is to print final obj
     print(finalObj)
     return dataOK, frameNumber, finalObj
 
@@ -660,6 +673,7 @@ def parseArg():
         choices=["pointcloud", "macro", "micro"],
     )
     args = parser.parse_args()
+    print(f"args %%%%%%%%%%%% {args.conf}")
     return args
 
 
@@ -696,8 +710,15 @@ if __name__ == "__main__":
                 # Store the current frame into frameData
                 print(finalObj)
                 currentIndex += 1
+            if args.conf == "pointcloud":
+                time.sleep(0.03)
+            elif args.conf == "macro":
+                time.sleep(0.2)
+            else :
+                time.sleep(0.5)
 
-            # time.sleep(0.03)  # Sampling frequency of 30 Hz
+                
+              # Sampling frequency of 30 Hz //0.03 for default point cloud // macro ke liye 0.2 // micro ke liye 0.5
 
         # Stop the program and close everything if Ctrl + c is pressed
         except KeyboardInterrupt:
