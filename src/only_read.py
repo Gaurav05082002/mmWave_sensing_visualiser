@@ -22,7 +22,7 @@ os_name = os.environ.get("OS")
 framePeriodicity = 0
 configs = {
     "pointcloud": "Configurations/pointcloud_configuration.cfg",
-    "macro": "Configurations/macro_7fps.cfg",
+    "macro": "Configurations/macro_5fps.cfg",
     "micro": "Configurations/micro_2fps.cfg",
 }
 #configFileName = configs["pointcloud"]
@@ -647,7 +647,7 @@ def readAndParseData16xx(Dataport, configParameters, filename):
             # Check that there are no errors with the buffer length
             if byteBufferLength < 0:
                 byteBufferLength = 0
-
+    print(finalObj)
     return dataOK, frameNumber, finalObj
 
 
