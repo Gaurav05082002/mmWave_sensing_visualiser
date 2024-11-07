@@ -1,6 +1,6 @@
 # mmWave-Demo-App
 
-##[ppt.pdf](https://github.com/user-attachments/files/17659180/BTP.2.FINAL.PPT.pdf)
+[ppt.pdf](https://github.com/user-attachments/files/17659180/BTP.2.FINAL.PPT.pdf)
 
 ![image](https://github.com/user-attachments/assets/21a71256-ad71-457a-8f87-c6d0db0d49a1)
 ![image](https://github.com/user-attachments/assets/d85cdb20-94b8-4083-b20c-aca903d7e466)
